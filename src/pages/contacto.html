@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contacto - Paticos Miauquis</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+  <header class="main-header">
+    <a href="./index.html" class="logo">
+      <img src="../assets/img/logo.png" alt="Logo Paticos Miauquis">
+      <span>Paticos Miauquis</span>
+    </a>
+    <nav class="main-nav">
+      <ul>
+        <li><a href="./index.html">Inicio</a></li>
+        <li><a href="./productos.html">Productos</a></li>
+        <li><a href="./nosotros.html">Nosotros</a></li>
+        <li><a href="./blogs.html">Blog</a></li>
+        <li><a href="./contacto.html">Contacto</a></li>
+        <li><a href="./inicio-sesion.html">Login</a></li>
+        <li><a href="./carrito.html" class="cart-icon">
+          🛒 <span id="cart-count" class="badge">0</span>
+        </a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="form-wrapper">
+      <h1>Contáctanos</h1>
+      <p>¿Tienes alguna pregunta o sugerencia? ¡Nos encantaría escucharte!</p>
+      <form id="contact-form" novalidate data-success-message="Mensaje enviado (demo). ¡Gracias por contactarnos!">
+        <div class="form-group">
+          <label for="contact-nombre">Nombre</label>
+          <input type="text" id="contact-nombre" required maxlength="100">
+        </div>
+        <div class="form-group">
+          <label for="contact-email">Correo Electrónico (Opcional)</label>
+          <input type="email" id="contact-email" maxlength="100">
+        </div>
+        <div class="form-group">
+          <label for="contact-msg">Mensaje</label>
+          <textarea id="contact-msg" required maxlength="500"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Enviar Mensaje</button>
+      </form>
+    </div>
+  </main>
+
+  <footer class="main-footer">
+    <div class="footer-content">
+      <p>&copy; 2025 Paticos Miauquis. Todos los derechos reservados.</p>
+      <div class="footer-links">
+        <a href="./nosotros.html">Sobre Nosotros</a>
+        <a href="./contacto.html">Contacto</a>
+        <a href="./inicio-sesion.html">Iniciar Sesión</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/cart.js" type="module"></script>
+  <script type="module">
+    import { initValidation } from '../assets/js/validation.js';
+
+    const contactRules = [
+      { id: 'contact-nombre', type: 'required', name: 'Nombre', maxLength: 100 },
+      { id: 'contact-email', type: 'email' },
+      { id: 'contact-msg', type: 'required', name: 'Mensaje', maxLength: 500 }
+    ];
+
+    initValidation('contact-form', contactRules);
+  </script>
+
+</body>
+</html>

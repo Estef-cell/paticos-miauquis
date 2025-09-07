@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrito - Paticos Miauquis</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+  <header class="main-header">
+    <a href="./index.html" class="logo">
+      <img src="../assets/img/logo.png" alt="Logo Paticos Miauquis">
+      <span>Paticos Miauquis</span>
+    </a>
+    <nav class="main-nav">
+      <ul>
+        <li><a href="./index.html">Inicio</a></li>
+        <li><a href="./productos.html">Productos</a></li>
+        <li><a href="./nosotros.html">Nosotros</a></li>
+        <li><a href="./blogs.html">Blog</a></li>
+        <li><a href="./contacto.html">Contacto</a></li>
+        <li><a href="./inicio-sesion.html">Login</a></li>
+        <li><a href="./carrito.html" class="cart-icon">
+          🛒 <span id="cart-count" class="badge">0</span>
+        </a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container" id="cart-container">
+    <h1>Tu Carrito de Compras</h1>
+    <div id="cart-content">
+      <!-- El contenido del carrito se renderizará aquí -->
+    </div>
+  </main>
+
+  <footer class="main-footer">
+    <div class="footer-content">
+      <p>&copy; 2025 Paticos Miauquis. Todos los derechos reservados.</p>
+      <div class="footer-links">
+        <a href="./nosotros.html">Sobre Nosotros</a>
+        <a href="./contacto.html">Contacto</a>
+        <a href="./inicio-sesion.html">Iniciar Sesión</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/cart.js" type="module"></script>
+  <script type="module">
+    import { items, total, setQty, removeFromCart, clear } from '../assets/js/cart.js';
+
+    const cartContent = document.getElementById('cart-content');
+
+    const renderCart = () => {
+      const cartItems = items();
+      
+      if (cartItems.length === 0) {
+        cartContent.innerHTML = '<p>Tu carrito está vacío. <a href="./productos.html">¡Mira nuestros productos!</a></p>';
+        return;
+      }
+
+      const tableRows = cartItems.map(item => `
+        <tr>
+          <td>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              <img src="${item.img}" alt="${item.name}" style="width: 50px; height: 50px; object-fit: cover;">
+              <span>${item.name}</span>
+            </div>
+          </td>
+          <td>$${item.price.toLocaleString('es-CL')}</td>
+          <td>
+            <input 
+              type="number" 
+              value="${item.qty}" 
+              min="1" 
+              max="${item.stock}" 
+              data-id="${item.id}"
+              class="quantity-input"
+              aria-label="Cantidad de ${item.name}"
+            >
+          </td>
+          <td>$${item.subtotal.toLocaleString('es-CL')}</td>
+          <td>
+            <button class="btn btn-danger remove-btn" data-id="${item.id}">Eliminar</button>
+          </td>
+        </tr>
+      `).join('');
+
+      cartContent.innerHTML = `
+        <table class="cart-table">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Precio</th>
+              <th>Cantidad</th>
+              <th>Subtotal</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${tableRows}
+          </tbody>
+        </table>
+        <div class="cart-total">
+          Total: $${total().toLocaleString('es-CL')}
+        </div>
+        <div class="cart-actions">
+          <button id="clear-cart-btn" class="btn btn-danger">Vaciar Carrito</button>
+        </div>
+      `;
+    };
+
+    cartContent.addEventListener('change', (e) => {
+      if (e.target.classList.contains('quantity-input')) {
+        const id = e.target.dataset.id;
+        const qty = parseInt(e.target.value, 10);
+        setQty(id, qty);
+        renderCart();
+      }
+    });
+
+    cartContent.addEventListener('click', (e) => {
+      if (e.target.classList.contains('remove-btn')) {
+        const id = e.target.dataset.id;
+        Swal.fire({
+          title: '¿Estás seguro?',
+          text: "No podrás revertir esto.",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#3085d6',
+          confirmButtonText: 'Sí, ¡elimínalo!',
+          cancelButtonText: 'Cancelar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            removeFromCart(id);
+            renderCart();
+            Swal.fire(
+              '¡Eliminado!',
+              'El producto ha sido eliminado de tu carrito.',
+              'success'
+            )
+          }
+        })
+      }
+      if (e.target.id === 'clear-cart-btn') {
+        Swal.fire({
+          title: '¿Vaciar Carrito?',
+          text: "Se eliminarán todos los productos de tu carrito.",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#3085d6',
+          confirmButtonText: 'Sí, ¡vacíalo!',
+          cancelButtonText: 'Cancelar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            clear();
+            renderCart();
+            Swal.fire(
+              '¡Carrito Vacío!',
+              'Todos los productos han sido eliminados.',
+              'success'
+            )
+          }
+        })
+      }
+    });
+
+    // Render inicial
+    renderCart();
+  </script>
+
+</body>
+</html>

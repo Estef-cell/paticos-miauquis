@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Productos - Paticos Miauquis</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+  <header class="main-header">
+    <a href="./index.html" class="logo">
+      <img src="../assets/img/logo.png" alt="Logo Paticos Miauquis">
+      <span>Paticos Miauquis</span>
+    </a>
+    <nav class="main-nav">
+      <ul>
+        <li><a href="./index.html">Inicio</a></li>
+        <li><a href="./productos.html">Productos</a></li>
+        <li><a href="./nosotros.html">Nosotros</a></li>
+        <li><a href="./blogs.html">Blog</a></li>
+        <li><a href="./contacto.html">Contacto</a></li>
+        <li><a href="./inicio-sesion.html">Login</a></li>
+        <li><a href="./carrito.html" class="cart-icon">
+          🛒 <span id="cart-count" class="badge">0</span>
+        </a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1>Todos Nuestros Productos</h1>
+    <div class="cards" id="products-grid">
+      <!-- Los productos se cargarán aquí -->
+    </div>
+  </main>
+
+  <footer class="main-footer">
+    <div class="footer-content">
+      <p>&copy; 2025 Paticos Miauquis. Todos los derechos reservados.</p>
+      <div class="footer-links">
+        <a href="./nosotros.html">Sobre Nosotros</a>
+        <a href="./contacto.html">Contacto</a>
+        <a href="./inicio-sesion.html">Iniciar Sesión</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/cart.js" type="module"></script>
+  <script type="module">
+    import { PRODUCTS } from '../assets/js/products.js';
+    import { addToCart } from '../assets/js/cart.js';
+
+    const productsContainer = document.getElementById('products-grid');
+
+    PRODUCTS.forEach(product => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <img src="${product.img}" alt="${product.name}" class="card-img">
+        <div class="card-body">
+          <h3 class="card-title">${product.name}</h3>
+          <p class="card-text">Precio: $${product.price.toLocaleString('es-CL')}</p>
+          <div class="card-actions">
+            <a href="./producto.html?id=${product.id}" class="btn btn-primary">Ver</a>
+            <button class="btn btn-accent" data-id="${product.id}">Añadir</button>
+          </div>
+        </div>
+      `;
+      productsContainer.appendChild(card);
+    });
+
+    productsContainer.addEventListener('click', (e) => {
+      if (e.target.matches('.btn-accent')) {
+        const id = e.target.dataset.id;
+        addToCart(id, 1);
+        Swal.fire({
+          title: '¡Añadido!',
+          text: 'Producto añadido al carrito.',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>
