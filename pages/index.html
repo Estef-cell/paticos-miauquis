@@ -1,30 +1,31 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Inicio - Paticos Miauquis</title>
-  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/main.css"/>
 </head>
 <body>
 
   <header class="main-header">
-    <a href="./index.html" class="logo">
-      <img src="../assets/img/logo.png" alt="Logo Paticos Miauquis">
+    <a href="./index.html" class="logo" aria-label="Ir al inicio">
+      <img src="../assets/img/logo.png" alt="Logo Paticos Miauquis"/>
       <span>Paticos Miauquis</span>
     </a>
-    <nav class="main-nav">
+    <nav class="main-nav" aria-label="Principal">
       <ul>
-        <li><a href="./index.html">Inicio</a></li>
+        <li><a href="./index.html" aria-current="page">Inicio</a></li>
         <li><a href="./productos.html">Productos</a></li>
         <li><a href="./nosotros.html">Nosotros</a></li>
         <li><a href="./blogs.html">Blog</a></li>
         <li><a href="./contacto.html">Contacto</a></li>
         <li><a href="./inicio-sesion.html">Login</a></li>
-        <li><a href="./carrito.html" class="cart-icon">
-          🛒 <span id="cart-count" class="badge">0</span>
-        </a></li>
+        <li>
+          <a href="./carrito.html" class="cart-icon" aria-label="Ver carrito">
+            🛒 <span id="cart-count" class="badge" aria-live="polite">0</span>
+          </a>
+        </li>
       </ul>
     </nav>
   </header>
@@ -33,18 +34,16 @@
     <div class="container">
       <section class="hero">
         <div class="logo">
-          <img src="../assets/img/logo.png" alt="Logo Grande Paticos Miauquis">
+          <img src="../assets/img/logo.png" alt="Logo Grande Paticos Miauquis"/>
         </div>
         <h1>Bienvenido a Paticos Miauquis</h1>
-        <p>La tienda donde la elegancia felina se encuentra con la alegría de los patos. Encuentra los mejores accesorios para tus compañeros con plumas y bigotes.</p>
+        <p>Elegancia felina y alegría de patos. Accesorios para plumas y bigotes.</p>
         <a href="./productos.html" class="btn btn-primary">Ver Productos</a>
       </section>
 
-      <section>
-        <h2>Productos Destacados</h2>
-        <div class="cards" id="featured-products">
-          <!-- Los productos destacados se cargarán aquí -->
-        </div>
+      <section aria-labelledby="destacados-title">
+        <h2 id="destacados-title">Productos Destacados</h2>
+        <div class="cards" id="featured-products"></div>
       </section>
     </div>
   </main>
@@ -60,6 +59,10 @@
     </div>
   </footer>
 
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- Módulos -->
   <script src="../assets/js/cart.js" type="module"></script>
   <script type="module">
     import { PRODUCTS } from '../assets/js/products.js';
@@ -68,16 +71,18 @@
     const featuredContainer = document.getElementById('featured-products');
     const featuredProducts = PRODUCTS.slice(0, 6);
 
-    featuredProducts.forEach(product => {
+    const fmtCLP = (n) => Number(n).toLocaleString('es-CL');
+
+    featuredProducts.forEach((product) => {
       const card = document.createElement('div');
       card.className = 'card';
       card.innerHTML = `
-        <img src="${product.img}" alt="${product.name}" class="card-img">
+        <img src="${product.img}" alt="${product.name}" class="card-img" loading="lazy">
         <div class="card-body">
           <h3 class="card-title">${product.name}</h3>
-          <p class="card-text">Precio: $${product.price.toLocaleString('es-CL')}</p>
+          <p class="card-text">Precio: $${fmtCLP(product.price)}</p>
           <div class="card-actions">
-            <a href="./producto.html?id=${product.id}" class="btn btn-primary">Ver</a>
+            <a href="./producto.html?id=${encodeURIComponent(product.id)}" class="btn btn-primary">Ver</a>
             <button class="btn btn-accent" data-id="${product.id}">Añadir</button>
           </div>
         </div>
@@ -89,16 +94,17 @@
       if (e.target.matches('.btn-accent')) {
         const id = e.target.dataset.id;
         addToCart(id, 1);
-        Swal.fire({
-          title: '¡Añadido!',
-          text: 'Producto añadido al carrito.',
-          icon: 'success',
-          timer: 1500,
-          showConfirmButton: false
-        });
+        if (window.Swal) {
+          Swal.fire({
+            title: 'Añadido',
+            text: 'Producto añadido al carrito',
+            icon: 'success',
+            timer: 1200,
+            showConfirmButton: false
+          });
+        }
       }
     });
   </script>
-
 </body>
 </html>
